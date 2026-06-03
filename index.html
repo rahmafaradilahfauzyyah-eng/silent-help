@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>SembakoUtama</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="logo" id="logo-utama" style="cursor: pointer;">
+            <img src="image/logo.png" alt="logo">
+        </div>
+
+        <div class="search-box">
+            <input type="text" placeholder="Search">
+            <button>🔍</button>
+        </div>
+    </header>
+
+    <!-- Produk -->
+    <section class="produk-container">
+
+        <div class="produk">
+            <img src="image/beras.png" alt="Beras">
+            <p>Beras Cianjur 10kg</p>
+            <p class="harga">Rp116.550 <span>Rp129.500</span></p>
+            <p class="diskon">Diskon 10%</p>
+            <button onclick="tambahKeranjang('Beras')">Tambah Ke Keranjang</button>
+        </div>
+
+        <div class="produk">
+            <img src="image/minyak goreng.png" alt="Minyak">
+            <p>Minyak Goreng Bimoli 1kg</p>
+            <p class="harga">Rp20.400</p>
+            <button onclick="tambahKeranjang('Minyak')">Tambah Ke Keranjang</button>
+        </div>
+
+        <div class="produk">
+            <img src="image/gula pasir.png" alt="Gula">
+            <p>Gula Pasir Gulaku 1kg</p>
+            <p class="harga">Rp17.500</p>
+            <button onclick="tambahKeranjang('Gula')">Tambah Ke Keranjang</button>
+        </div>
+
+    </section>
+
+    <!-- Icon Keranjang -->
+    <div class="cart-icon">
+        🛒 <span id="jumlah">0</span>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

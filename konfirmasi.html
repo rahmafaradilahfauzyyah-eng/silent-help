@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Konfirmasi Pesanan - SembakoUtama</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+
+    <header>
+        <div class="logo">
+            <img src="image/logo.png" alt="logo" id="logo-utama">
+            <div>
+                <h1>SEMBAKOUTAMA</h1>
+                <small>Pilihan Utama Keluarga Anda</small>
+            </div>
+        </div>
+        <div class="search-box">
+            <input type="text" placeholder="Tips Memasak 🔍">
+        </div>
+    </header>
+
+    <div class="title">
+        <h2>Konfirmasi Pesanan</h2>
+        <p><b>Pesanan Diproses</b></p>
+    </div>
+
+    <div class="info-belanja">
+        <p id="nomorPesanan">No. Pesanan : #SU-00000</p>
+        <p>Jasa Ekspedisi : J&T Express</p>
+        <p>Metode Pembayaran : COD</p>
+        <p id="totalBelanja">Total Pembayaran : Rp0</p>
+    </div>
+
+    <div id="data-laporan-rahasia" style="display:none;"></div>
+
+    <div class="message">
+        <p id="pesanKonfirmasi">
+            Terima kasih, pesanan sembako Anda sedang kami siapkan.
+        </p>
+    </div>
+
+    <div class="box">
+        <p><b>Barang Anda akan tiba dalam 2–3 hari.</b></p>
+        <p>Menghemat kuota belanja</p>
+    </div>
+
+    <div class="box" id="trackingStatus">
+        <h3>Status Laporan</h3>
+        <p id="idLaporan">ID Laporan : -</p>
+        <p id="statusLaporan">Status : Menunggu</p>
+        <p id="updateLaporan">Update : Menunggu Verifikasi</p>
+    </div>
+
+    <button class="btn" onclick="window.location.href='index.html'">
+        Kembali Belanja
+    </button>
+
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+    // ==========================================
+    // 3. AGAR STATUS SELALU TERBARU (MODIFIKASI)
+    // ==========================================
+    const dataTerakhir = JSON.parse(localStorage.getItem("laporanSilentHelp"));
+    const semuaLaporan = JSON.parse(localStorage.getItem("semuaLaporan")) || [];
+    let data = null;
+
+    if (dataTerakhir) {
+        data = semuaLaporan.find(item => item.nomor === dataTerakhir.nomor);
+    }
+
+    // =========================
+    // JIKA ADA DATA
+    // =========================
+    if (data) {
+
+        // buat nomor pesanan palsu
+        const nomorPesanan = "#SU-" + Math.floor(100000 + Math.random() * 900000);
+
+        // total random
+        const total = Math.floor(50000 + Math.random() * 150000);
+
+        // tampilkan nomor
+        document.getElementById("nomorPesanan").innerHTML = `
+            No. Pesanan : ${nomorPesanan}
+        `;
+
+        // tampilkan total
+        document.getElementById("totalBelanja").innerHTML = `
+            Total Pembayaran : Rp${total.toLocaleString("id-ID")}
+        `;
+
+        // tampilkan pesan aman
+        document.getElementById("pesanKonfirmasi").innerHTML = `
+            Terima kasih, pesanan Anda sedang diproses oleh tim kami.
+            <br><br>
+            Nomor transaksi Anda: <b>${nomorPesanan}</b>
+        `;
+
+        // ==========================================
+        // 2. TAMBAHKAN SCRIPT TRACKING STATUS
+        // ==========================================
+        document.getElementById("idLaporan").innerHTML = `
+            ID Laporan : <b>${data.nomor}</b>
+        `;
+
+        document.getElementById("statusLaporan").innerHTML = `
+            Status : <b>${data.status || "Menunggu"}</b>
+        `;
+
+        document.getElementById("updateLaporan").innerHTML = `
+            Update : <b>${data.update || "Laporan telah diterima"}</b>
+        `;
+    }
+});
+</script>
+
+</body>
+</html>

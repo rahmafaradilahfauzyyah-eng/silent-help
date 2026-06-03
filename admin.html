@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Silent Help</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="halaman-admin">
+    <div class="admin-container">
+        <header class="admin-header">
+            <img src="image/logo.png" alt="Logo" width="100">
+            <h2>Dashboard Admin Satgas & Relawan</h2>
+        </header>
+
+        <main class="dashboard-content" id="dashboardAdmin">
+            </main>
+    </div>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", () => {
+        // ==========================================
+        // FUNGSI UBAH STATUS (MODIFIKASI UPDATE TEKS)
+        // ==========================================
+        window.ubahStatus = function(nomorLaporan, statusBaru) {
+            let semuaLaporan = JSON.parse(localStorage.getItem("semuaLaporan")) || [];
+            
+            semuaLaporan.forEach((laporan) => {
+                if (laporan.nomor === nomorLaporan) {
+                    laporan.status = statusBaru;
+
+                    if (statusBaru === "Menunggu") {
+                        laporan.update = "Laporan telah diterima";
+                    }
+                    else if (statusBaru === "Diproses") {
+                        laporan.update = "Petugas sedang memproses laporan";
+                    }
+                    else if (statusBaru === "Satgas Menuju Lokasi") {
+                        laporan.update = "Petugas menuju lokasi";
+                    }
+                    else if (statusBaru === "Korban Ditemukan") {
+                        laporan.update = "Korban telah ditemukan";
+                    }
+                    else if (statusBaru === "Selesai") {
+                        laporan.update = "Kasus telah selesai ditangani";
+                    }
+                }
+            });
+
+            localStorage.setItem("semuaLaporan", JSON.stringify(semuaLaporan));
+            alert("Status berhasil diperbarui");
+            location.reload();
+        };
+
+        // =========================
+        // VALIDASI ADMIN
+        // =========================
+        const isAdmin = sessionStorage.getItem("modeAdmin");
+        if (isAdmin !== "true") {
+            alert("Akses ditolak");
+            window.location.href = "index.html";
+            return;
+        }
+
+        // ==========================================
+        // AMBIL DATA LAPORAN
+        // ==========================================
+        const semuaLaporan = JSON.parse(localStorage.getItem("semuaLaporan")) || [];
+        const dashboard = document.getElementById("dashboardAdmin");
+
+        // ==========================================
+        // JIKA TIDAK ADA DATA
+        // ==========================================
+        if (semuaLaporan.length === 0) {
+            dashboard.innerHTML = `
+                <div class="box box-empty">
+                    <h3>Tidak ada laporan masuk</h3>
+                </div>
+            `;
+            return;
+        }
+
+        let htmlContent = "";
+
+        // ==========================================
+        // 1. KALKULASI STATISTIK: BERDASARKAN STATUS
+        // ==========================================
+        const totalMenunggu = semuaLaporan.filter(x => (x.status || "Menunggu") === "Menunggu").length;
+        const totalDiproses = semuaLaporan.filter(x => x.status === "Diproses").length;
+        const totalMenuju = semuaLaporan.filter(x => x.status === "Satgas Menuju Lokasi").length;
+        const totalDitemukan = semuaLaporan.filter(x => x.status === "Korban Ditemukan").length;
+        const totalSelesai = semuaLaporan.filter(x => x.status === "Selesai").length;
+
+        // ==========================================
+        // 2. KALKULASI STATISTIK: BERDASARKAN KATEGORI
+        // ==========================================
+        const totalLaporan = semuaLaporan.length;
+        let totalKDRT = 0;
+        let totalBullying = 0;
+        let totalPelecehan = 0;
+        let totalLainnya = 0;
+
+        semuaLaporan.forEach((laporan) => {
+            const kat = laporan.kategori || [];
+            if (kat.includes("KDRT")) totalKDRT++;
+            if (kat.includes("Bullying")) totalBullying++;
+            if (kat.includes("Pelecehan Seksual")) totalPelecehan++;
+            if (kat.includes("Lainnya")) totalLainnya++;
+        });
+
+        // ==========================================
+        // TAMPILKAN DASHBOARD STATISTIK GABUNGAN
+        // ==========================================
+        htmlContent += `
+        <div class="dashboard-statistik">
+            <h2>📊 Ringkasan Status Kasus</h2>
+            <div class="statistik-grid">
+                <div class="stat-card">🟡 Menunggu <h3>${totalMenunggu}</h3></div>
+                <div class="stat-card">🔵 Diproses <h3>${totalDiproses}</h3></div>
+                <div class="stat-card">🟠 Satgas Menuju Lokasi <h3>${totalMenuju}</h3></div>
+                <div class="stat-card">🟢 Korban Ditemukan <h3>${totalDitemukan}</h3></div>
+                <div class="stat-card">✅ Selesai <h3>${totalSelesai}</h3></div>
+            </div>
+            <br><br>
+            <h2>⚠️ Distribusi Jenis Ancaman</h2>
+            <div class="statistik-grid">
+                <div class="stat-card">📋 Total Laporan <h3>${totalLaporan}</h3></div>
+                <div class="stat-card">🏠 KDRT <h3>${totalKDRT}</h3></div>
+                <div class="stat-card">🗣️ Bullying <h3>${totalBullying}</h3></div>
+                <div class="stat-card">🛑 Pelecehan Seksual <h3>${totalPelecehan}</h3></div>
+                <div class="stat-card">🔍 Lainnya <h3>${totalLainnya}</h3></div>
+            </div>
+        </div>
+        `;
+
+        // ==========================================
+        // PERULANGAN SELURUH LAPORAN
+        // ==========================================
+        [...semuaLaporan]
+        .sort((a, b) => {
+            if (a.status === "DARURAT") return -1;
+            if (b.status === "DARURAT") return 1;
+            return 0;
+        })
+        .reverse()
+        .forEach((data) => {
+            const statusSekarang = data.status || "Menunggu";
+            
+            // Penentuan Warna Status Dinamis
+            let kelasWarna = "status-menunggu"; 
+            if (statusSekarang === "DARURAT") kelasWarna = "status-darurat";
+            if (statusSekarang === "Diproses") kelasWarna = "status-diproses";
+            if (statusSekarang === "Satgas Menuju Lokasi") kelasWarna = "status-menuju";
+            if (statusSekarang === "Korban Ditemukan") kelasWarna = "status-ditemukan";
+            if (statusSekarang === "Selesai") kelasWarna = "status-selesai";
+
+            const mapsURL = `https://maps.google.com/maps?q=${data.lat},${data.lng}&z=15&output=embed`;
+            const mapsLinkExternal = `https://www.google.com/maps?q=${data.lat},${data.lng}`;
+
+            htmlContent += `
+                <div class="report-card">
+                    <div class="map-visualization">
+                        <iframe width="100%" height="350" loading="lazy" allowfullscreen src="${mapsURL}"></iframe>
+                    </div>
+
+                    <div class="data-details">
+                        ${data.status === "DARURAT" ? `<div class="panic-banner">🚨 DARURAT 🚨</div>` : ""}
+                        
+                        <h1>DATA ESKALASI DARURAT<br>SILENT HELP</h1>
+                        
+                        <div class="detail-item">
+                            <p><strong>ID Kasus:</strong> ${data.nomor}</p>
+                            
+                            <p>
+                                <strong>Status Saat Ini:</strong>
+                                <span class="status-badge ${kelasWarna}">
+                                    ${statusSekarang}
+                                </span>
+                            </p>
+
+                            <p><strong>▼ Ubah Status</strong></p>
+                            <select class="status-select" onchange="ubahStatus('${data.nomor}', this.value)">
+                                <option value="Menunggu" ${statusSekarang === "Menunggu" ? "selected" : ""}>🟡 Menunggu</option>
+                                <option value="Diproses" ${statusSekarang === "Diproses" ? "selected" : ""}>🔵 Diproses</option>
+                                <option value="Satgas Menuju Lokasi" ${statusSekarang === "Satgas Menuju Lokasi" ? "selected" : ""}>🟠 Satgas Menuju Lokasi</option>
+                                <option value="Korban Ditemukan" ${statusSekarang === "Korban Ditemukan" ? "selected" : ""}>🟢 Korban Ditemukan</option>
+                                <option value="Selesai" ${statusSekarang === "Selesai" ? "selected" : ""}>✅ Selesai</option>
+                            </select>
+                            <br><br>
+
+                            <p><strong>Nama Korban:</strong> ${data.nama}</p>
+                            <p><strong>Lokasi TKP:</strong> ${data.alamat}</p>
+                            <p><strong>Koordinat:</strong> (${data.lat}, ${data.lng})</p>
+                            <p><strong>Jenis Ancaman:</strong> ${Array.isArray(data.kategori) ? data.kategori.join(", ") : data.kategori}</p>
+                            <p><strong>Detail Lokasi:</strong> ${data.detailAlamat}</p>
+                            <p><strong>Deskripsi Korban:</strong> ${data.deskripsi}</p>
+                            <p><strong>Waktu Laporan:</strong> ${new Date(data.waktu).toLocaleString("id-ID")}</p>
+                            
+                            <br>
+                            <a href="${mapsLinkExternal}" target="_blank" class="btn-maps">
+                                Lihat Lokasi Korban
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+
+        // Tombol Logout Global
+        htmlContent += `
+            <div class="admin-logout-container">
+                <button class="btn-logout" id="logoutAdmin">
+                    Logout Admin
+                </button>
+            </div>
+        `;
+
+        dashboard.innerHTML = htmlContent;
+
+        // ==========================================
+        // EVENT LOGOUT
+        // ==========================================
+        document.getElementById("logoutAdmin").addEventListener("click", () => {
+            sessionStorage.removeItem("modeAdmin");
+            alert("Logout berhasil");
+            window.location.href = "index.html";
+        });
+    });
+    </script>
+</body>
+</html>

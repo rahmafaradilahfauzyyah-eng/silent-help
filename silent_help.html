@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SembakoUtama - Silent Help</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="main-wrapper">
+
+        <div class="content-box">
+
+            <!-- LOGO -->
+            <div class="logo-section">
+
+                <img
+                    src="image/logo.png"
+                    alt="Logo SembakoUtama"
+                    class="main-logo"
+                >
+
+            </div>
+
+            <hr class="divider">
+
+            <!-- TITLE -->
+            <h2 class="form-title">
+                SILENT-HELP
+            </h2>
+
+            <!-- FORM -->
+            <form id="formLaporan">
+
+                <!-- NAMA -->
+                <div class="form-group">
+
+                    <label for="nama">
+                        Nama
+                    </label>
+
+                    <input
+                        type="text"
+                        id="nama"
+                        placeholder="Masukkan nama"
+                        required
+                    >
+
+                </div>
+
+                <div class="checkbox-anonim">
+
+                    <input
+                        type="checkbox"
+                        id="anonim"
+                    >
+
+                    <label for="anonim">
+                        Laporkan secara anonim
+                    </label>
+
+                </div>
+
+                <!-- DESKRIPSI -->
+                <div class="form-group">
+
+                    <label for="deskripsi">
+                        Deskripsi Singkat
+                    </label>
+
+                    <textarea
+                        id="deskripsi"
+                        placeholder="Tulis kejadian..."
+                        required
+                    ></textarea>
+
+                </div>
+
+                <!-- KATEGORI -->
+                <div class="form-group">
+
+                    <label>
+                        Kategori Kekerasan
+                    </label>
+
+                    <div class="category-box">
+
+                        <label class="checkbox-item">
+
+                            <input
+                                type="checkbox"
+                                name="kategori"
+                                value="Pelecehan Seksual"
+                            >
+
+                            Pelecehan Seksual
+
+                        </label>
+
+                        <label class="checkbox-item">
+
+                            <input
+                                type="checkbox"
+                                name="kategori"
+                                value="Bullying"
+                            >
+
+                            Bullying
+
+                        </label>
+
+                        <label class="checkbox-item">
+
+                            <input
+                                type="checkbox"
+                                name="kategori"
+                                value="KDRT"
+                            >
+
+                            KDRT
+
+                        </label>
+
+                        <!-- MODIFIKASI: Penambahan id pada checkbox dan input text tersembunyi -->
+                        <label class="checkbox-item">
+
+                            <input
+                                type="checkbox"
+                                id="kategoriLainnya"
+                                name="kategori"
+                                value="Lainnya"
+                            >
+
+                            Lainnya
+
+                        </label>
+
+                        <input
+                            type="text"
+                            id="inputKategoriLainnya"
+                            placeholder="Tuliskan kategori lainnya..."
+                            style="display:none;"
+                        >
+
+                    </div>
+
+                </div>
+
+                <!-- ALAMAT -->
+                <div class="form-group">
+
+                    <label for="alamat">
+                        Alamat Saat Ini
+                    </label>
+
+                    <input
+                        type="text"
+                        id="alamat"
+                        placeholder="Masukkan alamat"
+                        required
+                    >
+
+                </div>
+
+                <!-- DETAIL -->
+                <div class="form-group">
+
+                    <label for="detail_alamat">
+                        Detail Alamat
+                    </label>
+
+                    <input
+                        type="text"
+                        id="detail_alamat"
+                        placeholder="Contoh: rumah warna putih"
+                    >
+
+                </div>
+
+                <!-- UPLOAD -->
+                <div class="form-group">
+
+                    <label for="bukti">
+                        Unggah Bukti
+                    </label>
+
+                    <div class="upload-container">
+
+                        <input
+                            type="file"
+                            id="bukti"
+                            class="file-input"
+                        >
+
+                        <div class="upload-info">
+
+                            <strong>
+                                Informasi Penting:
+                            </strong>
+
+                            Upload foto atau dokumen
+                            asli sebagai bukti kejadian.
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- BUTTON -->
+                <div class="button-group">
+
+                    <button
+                        type="submit"
+                        id="btnKirim"
+                        class="btn-kirim"
+                    >
+                        KIRIM LAPORAN
+                    </button>
+
+                    <button
+                        type="button"
+                        id="btnPanic"
+                        class="btn-panic"
+                    >
+                        PANIC BUTTON
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
